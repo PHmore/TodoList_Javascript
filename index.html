@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minha Todo List</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header>
+        <h1>Minha Lista de Tarefas</h1>
+        <p>Organize seu dia com Javascript</p>
+    </header>
+
+    <main>
+        
+        <section class="todo-input-section">
+            <form id="form-tarefa">
+                <input type="text" id="input-tarefa" placeholder="Adicionar nova tarefa..." required>
+                <button type="submit">Adicionar</button>
+            </form>
+        </section>
+
+        <section class="todo-list-section">
+            <ul id="lista-tarefas">
+                <li>TASK 1</li>
+                <li>TASK 2</li>
+                </ul>
+        </section>
+
+    </main>
+
+    <footer>
+        <p>Desenvolvido por <a href="https://github.com/PHmore">PHmore</a></p>
+        <p id="contador">0 tarefas pendentes</p>
+    </footer>
+
+    <script type="module" src="./js/app.js"></script>
+
+</body>
+</html>
