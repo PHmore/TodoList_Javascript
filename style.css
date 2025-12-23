@@ -81,3 +81,66 @@ footer a {
     color: white;
     text-decoration: none;
 }
+
+.completed {
+    text-decoration: line-through;
+    color: gray;
+    opacity: 0.6;
+}
+
+/* 1. Estilizando o Container da Lista (<ul>) */
+#lista-tarefas {
+    list-style-type: none; /* Remove as bolinhas padrão da lista */
+    padding: 0;            /* Remove o espaçamento padrão à esquerda */
+    margin-top: 20px;      /* Um respiro entre o filtro e a lista */
+}
+
+/* 2. Estilizando cada Item da Tarefa (<li>) */
+#lista-tarefas li {
+    /* O SEGREDO: Transforma o <li> em um container flexível */
+    display: flex;
+    
+    /* Alinha os itens verticalmente no centro */
+    align-items: center; 
+    
+    /* Joga o texto para a esquerda e o botão para a extrema direita */
+    justify-content: space-between;
+    
+    /* Estilos visuais para cada linha */
+    background-color: #fff; /* Fundo branco para destacar do fundo cinza */
+    padding: 12px 15px;     /* Espaçamento interno */
+    margin-bottom: 10px;    /* Espaço entre uma tarefa e outra */
+    border-radius: 8px;     /* Cantos arredondados modernos */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05); /* Uma sombra super leve para dar profundidade */
+}
+
+/* (Opcional) Classe para o texto da tarefa, se você quiser dar um ajuste fino */
+.task-text {
+    font-size: 1rem;
+    color: #333;
+    /* Garante que o texto ocupe o espaço e empurre o botão, se não usar justify-content: space-between */
+    /* flex: 1; */ 
+    /* margin-right: 15px; */
+}
+
+/* 3. Melhorando o Botão "Marcar" (.task-button) */
+.task-button {
+    /* Usando um estilo sólido e moderno, similar à sua imagem mas mais polido */
+    background-color: lightgreen; /* Um vermelho vibrante e moderno */
+    color: white;
+    border: none;
+    
+    /* Ajustando o tamanho */
+    padding: 8px 16px;
+    font-size: 0.9rem; /* Fonte um pouco menor para ficar proporcional */
+    font-weight: 600;  /* Texto em negrito */
+    
+    border-radius: 6px; /* Bordas arredondadas no botão também */
+    cursor: pointer;
+    transition: background-color 0.2s; /* Efeito suave ao passar o mouse */
+}
+
+/* Efeito Hover do Botão */
+.task-button:hover {
+    background-color: green; /* Vermelho mais escuro ao passar o mouse */
+}

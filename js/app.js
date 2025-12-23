@@ -1,8 +1,16 @@
+import { adicionarTarefa, filtrarTarefa, toggleTarefa } from "./actions.js";
+
 // ponto de entradas
 
 // 1. Selecionar os elementos (DOM)
 const formulario = document.querySelector('#form-tarefa');
 const input = document.querySelector('#input-tarefa');
+const filtro = document.querySelector('#filtrar-lista');
+
+// Invés de lidar com cada botão individualmente iremos lidar com o elemento pai
+const lista = document.querySelector('#lista-tarefas');
+
+//const selectedIndex = filtro.selectedIndex;
 
 // 2. Adicionar o "Ouvinte" (Event Listener) no FORMULÁRIO
 formulario.addEventListener('submit', function(evento) {
@@ -19,8 +27,7 @@ formulario.addEventListener('submit', function(evento) {
     }
 
     console.log("Salvei na variável:", textoDaTarefa);
-    // AQUI entraria a chamada para o seu arquivo actions.js:
-    // actions.addTodo(textoDaTarefa);
+    adicionarTarefa(textoDaTarefa);
 
     // 5. Limpar o campo
     input.value = '';
@@ -29,4 +36,35 @@ formulario.addEventListener('submit', function(evento) {
     input.focus();
 });
 
+filtro.addEventListener('change', (evento)=>{
+    evento.preventDefault();
+    console.log(evento.target.value);
+    filtrarTarefa(evento.target.value);
+});
 
+lista.addEventListener('click', (event) => {
+    
+    // 1. Onde foi o clique exatamente?
+    const elementoClicado = event.target;
+
+    // 2. Verifica se o clique foi num elemento que tem a classe do botão
+    if (elementoClicado.classList.contains('task-button')) {
+        
+        // 3. Pega o ID que guardamos no dataset
+        const idParaMarcar = elementoClicado.dataset.id;
+        
+        console.log("Clicou em marcar o ID:", idParaMarcar);
+
+        toggleTarefa(idParaMarcar);
+        // Chamar função para marcar, e podemos lidar desta mesma forma com o botão de deletar caso adicionarmos posteriormente
+    }
+});
+
+
+function init() {
+    console.log("Aplicação iniciada");
+    // Carregar memória
+}
+
+// init não roda automaticamente rsrs tem que chamar ao final para rodar assim que o script carregar
+init();
