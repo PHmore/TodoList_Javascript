@@ -10,6 +10,7 @@
 //Exemplo
 // Em actions.js
 
+import { salvar, carregar } from "./storage.js";
 import state from "./state.js";
 import renderizarLista from "./view.js";
 
@@ -29,12 +30,12 @@ export function adicionarTarefa(texto) {
     
     // 2. Atualiza Storage (Persistência)
     // Como o ID já foi gerado e está DENTRO do objeto, ele foi salvo "para sempre".
-    //storage.save(state.todos);
+    salvar(state.tarefas);
     
     // 3. Atualiza Tela será feita pela filtragem para evitar bugs como criar uma task e aparecer no filtro errado
     filtrarTarefa(state.filtroAtual);
 
-}
+};
 
 export function filtrarTarefa(filtro) {
     state.filtroAtual = filtro;
@@ -57,7 +58,7 @@ export function filtrarTarefa(filtro) {
 
     // Você deve retornar o valor ou chamar a função que renderiza a tela
     renderizarLista(tarefasFiltradas); 
-}
+};
 
 export function toggleTarefa(id) {
     // CONVERTA O ID PARA NÚMERO AQUI PARA GARANTIR
@@ -71,5 +72,41 @@ export function toggleTarefa(id) {
         return tarefa;
     });
 
+    salvar(state.tarefas);
+
     renderizarLista(state.tarefas);
+};
+
+export function carregarMemoria(){
+    state.tarefas = carregar();
+    console.log("Carregado: "+state.tarefas);
+    renderizarLista(state.tarefas);
+};
+
+
+
+// Função auxiliar interna (não precisa de export)
+function aplicarLimitesDeMemoria(todasAsTarefas) {
+    const LIMITE_PENDENTES = 10;
+    const LIMITE_CONCLUIDAS = 5;
+
+    // 1. Separa os dois grupos
+    let pendentes = todasAsTarefas.filter(t => !t.completed);
+    let concluidas = todasAsTarefas.filter(t => t.completed);
+
+    // 2. Aplica a "tesoura" se passar do limite
+    // .slice(-N) pega apenas os ÚLTIMOS N itens (os mais novos)
+    if (pendentes.length > LIMITE_PENDENTES) {
+        pendentes = pendentes.slice(-LIMITE_PENDENTES);
+    }
+
+    if (concluidas.length > LIMITE_CONCLUIDAS) {
+        concluidas = concluidas.slice(-LIMITE_CONCLUIDAS);
+    }
+
+    // 3. Junta tudo de novo e garante que esteja ordenado (opcional)
+    // Se quiser manter a ordem de criação, ordenamos pelo ID
+    const listaLimpa = [...pendentes, ...concluidas].sort((a, b) => a.id - b.id);
+
+    return listaLimpa;
 }

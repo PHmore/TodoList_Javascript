@@ -8,7 +8,7 @@
 // Note que são dados vivos, prontos para uso
 export default {
     tarefas: [
-        { id: 1, text: 'Tarefa Teste', completed: false }
+        //{ id: 1, text: 'Tarefa Teste', completed: false }
     ],
     filtroAtual: 'todos' // Outra coisa que fica no state
 };

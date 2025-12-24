@@ -1,4 +1,4 @@
-import { adicionarTarefa, filtrarTarefa, toggleTarefa } from "./actions.js";
+import { adicionarTarefa, filtrarTarefa, toggleTarefa, carregarMemoria } from "./actions.js";
 
 // ponto de entradas
 
@@ -64,7 +64,9 @@ lista.addEventListener('click', (event) => {
 function init() {
     console.log("Aplicação iniciada");
     // Carregar memória
-}
+    carregarMemoria();
+
+};
 
 // init não roda automaticamente rsrs tem que chamar ao final para rodar assim que o script carregar
 init();
