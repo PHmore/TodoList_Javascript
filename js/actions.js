@@ -12,16 +12,59 @@
 
 import { salvar, carregar } from "./storage.js";
 import state from "./state.js";
-import renderizarLista from "./view.js";
+import renderizarLista, { mostrarErro } from "./view.js";
 
 console.log(state.tarefas);
 
+function validaEntrada(texto) {
+    // 1. Segurança básica: verifica se é string
+    if (typeof texto !== 'string') {
+        throw new Error("Formato de entrada inválido.");
+    }
+
+    // 2. Sanitização: Remove espaços do começo e fim
+    // Ex: "  Comprar pão   " vira "Comprar pão"
+    const textoLimpo = texto.trim();
+
+    // 3. Validação de Vazio
+    if (textoLimpo.length === 0) {
+        throw new Error("Você precisa escrever o nome da tarefa!");
+    }
+
+    // 4. Validação de Tamanho Mínimo
+    if (textoLimpo.length < 3) {
+        throw new Error("A tarefa precisa ter pelo menos 3 letras.");
+    }
+
+    // 5. Validação de Tamanho Máximo (Opcional, mas bom para UI)
+    if (textoLimpo.length > 60) {
+        throw new Error("Texto muito longo! Abrevie para até 60 letras.");
+    }
+
+    // SE PASSAR POR TUDO: Retorna o texto já limpo para ser salvo
+    return textoLimpo;
+}
+
+
 export function adicionarTarefa(texto) {
+    try {
+        // PASSO 1: A Validação (O porteiro)
+        // Se der erro, ele pula direto para o catch lá embaixo.
+        // Se passar, ele nos devolve o texto sem espaços inúteis.
+        const textoTratado = validaEntrada(texto); 
+
+        // PASSO 2: Verificação de Duplicatas (Opcional mas Recomendado)
+        // Precisamos verificar no state se já existe algo igual
+        const jaExiste = state.tarefas.some(t => t.text.toLowerCase() === textoTratado.toLowerCase());
+        if (jaExiste) {
+            throw new Error("Essa tarefa já existe na sua lista!");
+        }
+        
     const novaTarefa = {
         // O Date.now() gera algo como 1703273849123
         // É quase impossível você clicar duas vezes no mesmo milissegundo.
         id: Date.now(), 
-        text: texto,
+        text: textoTratado,
         completed: false
     };
 
@@ -35,46 +78,70 @@ export function adicionarTarefa(texto) {
     // 3. Atualiza Tela será feita pela filtragem para evitar bugs como criar uma task e aparecer no filtro errado
     filtrarTarefa(state.filtroAtual);
 
+    } catch (error) {
+        console.log('Ocorreu um erro na Criação da tarefa');
+        
+        mostrarErro(error);
+    }
+
 };
 
 export function filtrarTarefa(filtro) {
-    state.filtroAtual = filtro;
-    const tarefas = state.tarefas; // Use const para referência local
-    let tarefasFiltradas; // Declare fora para ter escopo em toda a função
+    try {
+            
+        state.filtroAtual = filtro;
+        const tarefas = state.tarefas; // Use const para referência local
+        let tarefasFiltradas; // Declare fora para ter escopo em toda a função
 
-    const filtroLimpo = filtro.trim().toLowerCase();
-    console.log(filtroLimpo)
+        const filtroLimpo = filtro.trim().toLowerCase();
+        console.log(filtroLimpo)
 
-    if (filtroLimpo === 'a fazer') {
-        // Filtra onde completed é false
-        tarefasFiltradas = tarefas.filter(item => !item.completed);
-    } else if (filtroLimpo === 'concluídas' || filtroLimpo === 'concluidas') {
-        // Filtra onde completed é true
-        tarefasFiltradas = tarefas.filter(item => item.completed);
-    } else {
-        // Caso seja 'todas' ou qualquer outro valor
-        tarefasFiltradas = tarefas;
+        if (filtroLimpo === 'a fazer') {
+            // Filtra onde completed é false
+            tarefasFiltradas = tarefas.filter(item => !item.completed);
+        } else if (filtroLimpo === 'concluídas' || filtroLimpo === 'concluidas') {
+            // Filtra onde completed é true
+            tarefasFiltradas = tarefas.filter(item => item.completed);
+        } else {
+            // Caso seja 'todas' ou qualquer outro valor
+            tarefasFiltradas = tarefas;
+        }
+
+        // Você deve retornar o valor ou chamar a função que renderiza a tela
+        renderizarLista(tarefasFiltradas); 
+
+    
+    } catch (error) {
+        console.log('Ocorreu um erro na filtragem');
+        
+        mostrarErro(error);
     }
-
-    // Você deve retornar o valor ou chamar a função que renderiza a tela
-    renderizarLista(tarefasFiltradas); 
 };
 
 export function toggleTarefa(id) {
-    // CONVERTA O ID PARA NÚMERO AQUI PARA GARANTIR
-    const idNumero = Number(id); 
+    try {
+        
+        // CONVERTA O ID PARA NÚMERO AQUI PARA GARANTIR
+        const idNumero = Number(id); 
 
-    state.tarefas = state.tarefas.map(tarefa => {
-        // Agora compara Número com Número
-        if (tarefa.id === idNumero) {
-            return { ...tarefa, completed: !tarefa.completed }; 
-        }
-        return tarefa;
-    });
+        state.tarefas = state.tarefas.map(tarefa => {
+            // Agora compara Número com Número
+            if (tarefa.id === idNumero) {
+                return { ...tarefa, completed: !tarefa.completed }; 
+            }
+            return tarefa;
+        });
 
-    salvar(state.tarefas);
+        salvar(state.tarefas);
 
-    renderizarLista(state.tarefas);
+        filtrarTarefa(state.filtroAtual);
+
+
+    } catch (error) {
+        console.log('Ocorreu um erro no toggle');
+        
+        mostrarErro(error);
+    }
 };
 
 export function carregarMemoria(){
