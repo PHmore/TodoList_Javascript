@@ -116,11 +116,13 @@ export default function renderizarLista(tarefas) {
             
             // Adiciona botão de delete, checkbox, etc...
             lista.appendChild(li);
-
-            // Adiciona contador
-            const contador = document.querySelector('#contador');
-            contador.innerHTML = pendentesCont + ' Tarefas Pendentes';
         });
+        
+
+        // Adiciona contador
+        const contador = document.querySelector('#contador');
+        contador.innerHTML = pendentesCont + ' Tarefas Pendentes';
+    
     
     } catch (error) {
         console.log("Ocorreu um erro na renderização");
