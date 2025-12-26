@@ -12,7 +12,7 @@
 
 import { salvar, carregar } from "./storage.js";
 import state from "./state.js";
-import renderizarLista, { mostrarErro } from "./view.js";
+import renderizarLista, { mostrarErro, confirmarAcao } from "./view.js";
 
 console.log(state.tarefas);
 
@@ -43,6 +43,29 @@ function validaEntrada(texto) {
 
     // SE PASSAR POR TUDO: Retorna o texto já limpo para ser salvo
     return textoLimpo;
+}
+
+
+function apagarDadosInterno() {
+    state.tarefas = [];
+    salvar(state.tarefas);
+    renderizarLista(state.tarefas);
+    console.log("Memória limpa com sucesso.");
+}
+
+// --- AÇÃO DE ORQUESTRAÇÃO (Interação) ---
+// É essa que você exporta para o app.js
+export async function solicitarLimpezaTotal() {
+    // 1. A action pede para a view perguntar (pausa a execução aqui)
+    const confirmou = await confirmarAcao("Deseja apagar tudo permanentemente?");
+
+    // 2. Decide o fluxo baseado na resposta
+    if (confirmou) {
+        apagarDadosInterno();
+        console.log("Lixeira esvaziada!"); // Feedback extra opcional
+    } else {
+        console.log("Operação cancelada pelo usuário.");
+    }
 }
 
 

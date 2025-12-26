@@ -1,4 +1,4 @@
-import { adicionarTarefa, filtrarTarefa, toggleTarefa, carregarMemoria } from "./actions.js";
+import { adicionarTarefa, filtrarTarefa, toggleTarefa, carregarMemoria, solicitarLimpezaTotal } from "./actions.js";
 
 // ponto de entradas
 
@@ -9,6 +9,8 @@ const filtro = document.querySelector('#filtrar-lista');
 
 // Invés de lidar com cada botão individualmente iremos lidar com o elemento pai
 const lista = document.querySelector('#lista-tarefas');
+
+const apagarButton = document.querySelector('#deleteBtn')
 
 //const selectedIndex = filtro.selectedIndex;
 
@@ -60,6 +62,11 @@ lista.addEventListener('click', (event) => {
     }
 });
 
+apagarButton.addEventListener('click',(event) =>{
+    console.log("Será tudo apagado");
+    solicitarLimpezaTotal();
+    
+});
 
 function init() {
     console.log("Aplicação iniciada");

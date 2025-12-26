@@ -33,6 +33,7 @@ export function mostrarErro(mensagem) {
     }, 3000);
 };
 
+
 export default function renderizarLista(tarefas) {
 
     try {
@@ -104,5 +105,80 @@ export default function renderizarLista(tarefas) {
         console.log("Ocorreu um erro na renderização");
         
         mostrarErro(error)
+    }
+};
+
+export function mostrarModalConfirmacao(mensagem, funcaoDeConfirmacao) {
+    const body = document.querySelector('body');
+
+    // 1. Criar o HTML do Modal dinamicamente
+    const modal = document.createElement('div');
+    modal.classList.add('modal-overlay');
+    
+    modal.innerHTML = `
+        <div class="modal-box">
+            <h3 class="modal-titulo">Atenção!</h3>
+            <p>${mensagem}</p>
+            <div class="modal-botoes">
+                <button id="btn-cancel-modal" class="btn-cancelar">Cancelar</button>
+                <button id="btn-confirm-modal" class="btn-confirmar">Sim, apagar</button>
+            </div>
+        </div>
+    `;
+
+    // 2. Adicionar na tela
+    body.appendChild(modal);
+
+    // 3. Dar vida aos botões do modal
+    const btnCancel = modal.querySelector('#btn-cancel-modal');
+    const btnConfirm = modal.querySelector('#btn-confirm-modal');
+
+    // Se clicar em Cancelar: Apenas remove o modal da tela
+    btnCancel.addEventListener('click', () => {
+        modal.remove();
+    });
+
+    // Se clicar em Confirmar:
+    btnConfirm.addEventListener('click', () => {
+        funcaoDeConfirmacao(); // <--- Executa a ação real (apagarTudo)
+        modal.remove();        // Fecha o modal
+    });
+};
+
+export function confirmarAcao(mensagem) {
+    try {
+            
+        return new Promise((resolve) => {
+            const body = document.querySelector('body');
+            
+            const modal = document.createElement('div');
+            modal.classList.add('modal-overlay');
+            modal.innerHTML = `
+                <div class="modal-box">
+                    <p>${mensagem}</p>
+                    <div class="modal-botoes">
+                        <button id="btn-nao" class="btn-cancelar">Cancelar</button>
+                        <button id="btn-sim" class="btn-confirmar">Sim</button>
+                    </div>
+                </div>
+            `;
+            
+            body.appendChild(modal);
+
+            const btnSim = modal.querySelector('#btn-sim');
+            const btnNao = modal.querySelector('#btn-nao');
+
+            // Função para limpar e responder
+            const fechar = (resposta) => {
+                modal.remove();
+                resolve(resposta); // <--- AQUI é o retorno para o app.js
+            };
+
+            btnSim.addEventListener('click', () => fechar(true));
+            btnNao.addEventListener('click', () => fechar(false));
+        });
+    
+    } catch (error) {
+     mostrarErro(error);   
     }
 };

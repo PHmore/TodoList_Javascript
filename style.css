@@ -41,11 +41,36 @@ main {
     padding: 0 1rem;
 }
 
-/* Estilo do formulário para ficar bonito */
-.todo-input-section form {
-    display: flex;
+
+/* 1. O PAI (Section) manda os filhos ficarem lado a lado */
+.todo-input-section {
+    display: flex;        /* Transforma em linha */
+    align-items: center;  /* Centraliza verticalmente */
+    gap: 10px;           /* Espaço entre o Form e o Botão Vermelho */
+    width: 100%;          /* Garante que ocupe a largura toda */
+    margin-bottom: 20px;
+}
+
+/* 2. O FILHO MAIS VELHO (Formulário) */
+#form-tarefa {
+    display: flex;        /* O formulário também é flex para seus próprios filhos */
+    flex: 1;              /* ISSO É IMPORTANTE: Ocupa todo o espaço sobrando */
     gap: 10px;
-    margin-bottom: 2rem;
+}
+
+/* 3. O NETO (Input dentro do form) */
+#input-tarefa {
+    flex-grow: 1;         /* Estica para preencher o formulário */
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+/* 4. O FILHO CAÇULA (Botão Apagar Memória) */
+/* Ele fica quieto no canto dele, ocupando só o espaço necessário */
+#deleteBtn {
+    white-space: nowrap; /* Garante que o texto não quebre em duas linhas */
+    height: 40px;        /* Mesma altura aproximada dos inputs para ficar bonito */
 }
 
 input {
@@ -143,4 +168,76 @@ footer a {
 /* Efeito Hover do Botão */
 .task-button:hover {
     background-color: green; /* Vermelho mais escuro ao passar o mouse */
+}
+
+.danger {
+    background-color: #ae2727;
+}
+
+.danger:hover {
+    background-color: #912121;
+}
+
+
+
+/* Fundo escuro que cobre a tela toda */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5); /* Preto 50% transparente */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000; /* Fica em cima de tudo */
+    animation: fadeIn 0.2s;
+}
+
+/* A caixinha do popup */
+.modal-box {
+    background: white;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    text-align: center;
+    max-width: 300px;
+}
+
+.modal-titulo {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.modal-botoes {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 20px;
+    gap: 10px;
+}
+
+/* Botões do modal */
+.btn-confirmar {
+    background-color: #ff1744;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.btn-confirmar:hover{
+    background-color: #912121;
+
+}
+
+.btn-cancelar {
+    background-color: #ccc;
+    color: #333;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 5px;
+    cursor: pointer;
 }
