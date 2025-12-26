@@ -1,14 +1,11 @@
-// regras de negócio
-
-// Criará a task e a salvará no armazenamento, e também estará aplicada a lógica de riscar tasks
-// Deve a cada alteração atualizar e pedir para a view renderizar
-
-// Ao abrir deve se carregar o storage e fazer todo o esquema do state com storage
-
-// GERA ID
-
-//Exemplo
-// Em actions.js
+/**
+ * Camada de regras de negócio e orquestração da aplicação.
+ * 
+ * Este módulo atua como o "Hub de controle":
+ * - Coordena interações entre State, Storage e View
+ * - Aplica validações e regras de negócio
+ * - Nunca manipula diretamente o DOM
+ */
 
 import { salvar, carregar } from "./storage.js";
 import state from "./state.js";
@@ -16,6 +13,20 @@ import renderizarLista, { mostrarErro, confirmarAcao } from "./view.js";
 
 console.log(state.tarefas);
 
+
+/**
+ * Valida e sanitiza o texto de entrada de uma tarefa.
+ * 
+ * Regras aplicadas:
+ * - Deve ser string
+ * - Remove espaços extras
+ * - Não pode ser vazio
+ * - Tamanho mínimo e máximo
+ *
+ * @param {string} texto - Texto bruto informado pelo usuário.
+ * @returns {string} Texto validado e sanitizado.
+ * @throws {Error} Caso a entrada viole alguma regra.
+ */
 function validaEntrada(texto) {
     // 1. Segurança básica: verifica se é string
     if (typeof texto !== 'string') {
@@ -45,7 +56,14 @@ function validaEntrada(texto) {
     return textoLimpo;
 }
 
-
+/**
+ * Apaga todas as tarefas da memória, storage e tela.
+ * 
+ * Função interna de negócio, utilizada após confirmação explícita
+ * do usuário.
+ *
+ * @returns {void}
+ */
 function apagarDadosInterno() {
     state.tarefas = [];
     salvar(state.tarefas);
@@ -53,8 +71,14 @@ function apagarDadosInterno() {
     console.log("Memória limpa com sucesso.");
 }
 
-// --- AÇÃO DE ORQUESTRAÇÃO (Interação) ---
-// É essa que você exporta para o app.js
+/**
+ * Solicita confirmação do usuário para apagar todas as tarefas.
+ * 
+ * Orquestra a interação entre View (modal de confirmação)
+ * e regras de negócio (limpeza total).
+ *
+ * @returns {Promise<void>}
+ */
 export async function solicitarLimpezaTotal() {
     // 1. A action pede para a view perguntar (pausa a execução aqui)
     const confirmou = await confirmarAcao("Deseja apagar tudo permanentemente?");
@@ -68,7 +92,19 @@ export async function solicitarLimpezaTotal() {
     }
 }
 
-
+/**
+ * Cria uma nova tarefa e atualiza todo o fluxo da aplicação.
+ * 
+ * Etapas:
+ * - Validação e sanitização
+ * - Verificação de duplicidade
+ * - Atualização do state
+ * - Persistência no storage
+ * - Re-renderização com base no filtro atual
+ *
+ * @param {string} texto - Texto informado pelo usuário.
+ * @returns {void}
+ */
 export function adicionarTarefa(texto) {
     try {
         // PASSO 1: A Validação (O porteiro)
@@ -109,6 +145,13 @@ export function adicionarTarefa(texto) {
 
 };
 
+/**
+ * Filtra as tarefas conforme o critério selecionado
+ * e atualiza a interface.
+ *
+ * @param {string} filtro - Critério de filtro ("todas", "a fazer", "concluídas").
+ * @returns {void}
+ */
 export function filtrarTarefa(filtro) {
     try {
             
@@ -141,6 +184,12 @@ export function filtrarTarefa(filtro) {
     }
 };
 
+/**
+ * Alterna o status de conclusão de uma tarefa.
+ *
+ * @param {number|string} id - Identificador da tarefa.
+ * @returns {void}
+ */
 export function toggleTarefa(id) {
     try {
         
@@ -167,15 +216,26 @@ export function toggleTarefa(id) {
     }
 };
 
+/**
+ * Carrega as tarefas persistidas em memória
+ * e atualiza a interface inicial.
+ *
+ * @returns {void}
+ */
 export function carregarMemoria(){
     state.tarefas = carregar();
     console.log("Carregado: "+state.tarefas);
     renderizarLista(state.tarefas);
 };
 
-
-
-// Função auxiliar interna (não precisa de export)
+/**
+ * Aplica limites máximos de tarefas pendentes e concluídas.
+ * 
+ * Função auxiliar interna para controle de memória.
+ *
+ * @param {Array<Object>} todasAsTarefas - Lista completa de tarefas.
+ * @returns {Array<Object>} Lista limitada e ordenada.
+ */
 function aplicarLimitesDeMemoria(todasAsTarefas) {
     const LIMITE_PENDENTES = 10;
     const LIMITE_CONCLUIDAS = 5;

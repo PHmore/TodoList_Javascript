@@ -1,12 +1,17 @@
 // DOM e renderização
-// Deve apenas manipular o HTML para renderizar a lista, exibindo texto : data e caso estiver feita o texto deve estar riscado
-// Criar uma função de render o qual faz um loop (map ou forEach) no array recebido e renderiza cada item criando os elementos com create Element e adicionar a lista appendChild
+// Deve apenas manipular o HTML para exibir informações e respostas a requisições para o usuário
 
-// views.js
 
-// views.js
-
-// Cria um elemento temporário de aviso
+/**
+ * Exibe uma notificação visual de erro para o usuário.
+ * 
+ * Responsabilidade exclusiva da camada de View (DOM).
+ * Cria um aviso flutuante no canto superior direito da tela
+ * e o remove automaticamente após alguns segundos.
+ *
+ * @param {string} mensagem - Mensagem de erro a ser exibida ao usuário.
+ * @returns {void}
+ */
 export function mostrarErro(mensagem) {
     const container = document.querySelector('main'); // ou body
     
@@ -33,7 +38,23 @@ export function mostrarErro(mensagem) {
     }, 3000);
 };
 
-
+/**
+ * Renderiza a lista de tarefas na interface.
+ * 
+ * Responsável apenas por manipular o DOM com base no estado recebido,
+ * sem alterar dados ou regras de negócio.
+ * - Limpa a lista atual
+ * - Ordena tarefas (pendentes primeiro, mais recentes primeiro)
+ * - Cria elementos HTML (li, botões)
+ * - Atualiza o contador de tarefas pendentes
+ *
+ * @param {Array<Object>} tarefas - Lista de tarefas a serem renderizadas.
+ * @param {number} tarefas[].id - Identificador único da tarefa.
+ * @param {string} tarefas[].text - Texto descritivo da tarefa.
+ * @param {boolean} tarefas[].completed - Indica se a tarefa está concluída.
+ * 
+ * @returns {void}
+ */
 export default function renderizarLista(tarefas) {
 
     try {
@@ -108,43 +129,17 @@ export default function renderizarLista(tarefas) {
     }
 };
 
-export function mostrarModalConfirmacao(mensagem, funcaoDeConfirmacao) {
-    const body = document.querySelector('body');
-
-    // 1. Criar o HTML do Modal dinamicamente
-    const modal = document.createElement('div');
-    modal.classList.add('modal-overlay');
-    
-    modal.innerHTML = `
-        <div class="modal-box">
-            <h3 class="modal-titulo">Atenção!</h3>
-            <p>${mensagem}</p>
-            <div class="modal-botoes">
-                <button id="btn-cancel-modal" class="btn-cancelar">Cancelar</button>
-                <button id="btn-confirm-modal" class="btn-confirmar">Sim, apagar</button>
-            </div>
-        </div>
-    `;
-
-    // 2. Adicionar na tela
-    body.appendChild(modal);
-
-    // 3. Dar vida aos botões do modal
-    const btnCancel = modal.querySelector('#btn-cancel-modal');
-    const btnConfirm = modal.querySelector('#btn-confirm-modal');
-
-    // Se clicar em Cancelar: Apenas remove o modal da tela
-    btnCancel.addEventListener('click', () => {
-        modal.remove();
-    });
-
-    // Se clicar em Confirmar:
-    btnConfirm.addEventListener('click', () => {
-        funcaoDeConfirmacao(); // <--- Executa a ação real (apagarTudo)
-        modal.remove();        // Fecha o modal
-    });
-};
-
+/**
+ * Exibe um modal de confirmação para ações críticas do usuário.
+ * 
+ * A função cria dinamicamente um modal no DOM e retorna uma Promise
+ * que resolve para `true` ou `false` conforme a escolha do usuário.
+ *
+ * @param {string} mensagem - Texto exibido no modal de confirmação.
+ * @returns {Promise<boolean>} 
+ * - `true` se o usuário confirmar a ação
+ * - `false` se o usuário cancelar
+ */
 export function confirmarAcao(mensagem) {
     try {
             

@@ -1,14 +1,39 @@
-// localStorage
+/**
+ * Camada de persistência da aplicação (Storage).
+ * 
+ * Responsável por salvar e recuperar dados no localStorage
+ * do navegador, garantindo persistência entre sessões.
+ *
+ * Características:
+ * - Armazena apenas dados serializados em JSON
+ * - Vida útil persistente (enquanto não for apagado)
+ * - Não possui regras de negócio
+ * - Não interage com o DOM
+ */
 
-// Banco de dados local do navegador salva os dados no disco do usuário
-// Salva apenas JSON e a vida útil é persistente
-
-// Guarda o estado atual para que possa ser recuperado futuramente
-
-// storage.js
-// Chave para salvar no storage do navegador
+/**
+ * Chave utilizada para armazenar os dados no localStorage.
+ * Deve ser única para evitar conflitos com outras aplicações.
+ *
+ * @constant {string}
+ */
 const CHAVE = 'meu_todo_app';
 
+/**
+ * Salva os dados fornecidos no localStorage do navegador.
+ *
+ * Processo:
+ * - Serializa os dados em JSON
+ * - Persiste no disco do usuário
+ *
+ * Em caso de falha:
+ * - Loga o erro no console
+ * - Informa o usuário sobre o problema
+ * - Mantém os dados antigos intactos
+ *
+ * @param {Array<Object>} dados - Estado atual da aplicação a ser persistido.
+ * @returns {void}
+ */
 export function salvar(dados) {
     try {
         const dadosEmTexto = JSON.stringify(dados);
@@ -27,6 +52,20 @@ export function salvar(dados) {
     }
 };
 
+/**
+ * Carrega os dados persistidos no localStorage.
+ *
+ * Processo:
+ * - Recupera a string armazenada
+ * - Converte o JSON para objeto JavaScript
+ *
+ * Tratamento de erros:
+ * - Detecta dados corrompidos
+ * - Remove o conteúdo inválido do storage
+ * - Retorna um estado seguro (fallback)
+ *
+ * @returns {Array<Object>} Lista de dados persistidos ou lista vazia.
+ */
 export const carregar = () => {
     try {
         const dadosEmTexto = localStorage.getItem(CHAVE);

@@ -143,9 +143,6 @@ footer a {
 .task-text {
     font-size: 1rem;
     color: #333;
-    /* Garante que o texto ocupe o espaço e empurre o botão, se não usar justify-content: space-between */
-    /* flex: 1; */ 
-    /* margin-right: 15px; */
 }
 
 /* 3. Melhorando o Botão "Marcar" (.task-button) */

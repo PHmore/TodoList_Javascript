@@ -1,20 +1,75 @@
-import { adicionarTarefa, filtrarTarefa, toggleTarefa, carregarMemoria, solicitarLimpezaTotal } from "./actions.js";
+/**
+ * Ponto de entrada da aplicação (Entry Point).
+ *
+ * Responsabilidades:
+ * - Selecionar elementos do DOM
+ * - Registrar listeners de eventos
+ * - Encaminhar ações do usuário para a camada de regras de negócio
+ * - Inicializar a aplicação
+ *
+ * Este arquivo NÃO:
+ * - Manipula diretamente o state
+ * - Contém regras de negócio
+ * - Interage com localStorage
+ */
 
-// ponto de entradas
+import { adicionarTarefa, 
+    filtrarTarefa, 
+    toggleTarefa, 
+    carregarMemoria, 
+    solicitarLimpezaTotal 
+} from "./actions.js";
 
-// 1. Selecionar os elementos (DOM)
+/* ==========================================================================
+   Seleção de Elementos do DOM
+   ========================================================================== */
+
+/**
+ * Formulário de criação de tarefas.
+ * @type {HTMLFormElement}
+ */
 const formulario = document.querySelector('#form-tarefa');
+
+/**
+ * Campo de texto para entrada da tarefa.
+ * @type {HTMLInputElement}
+ */
 const input = document.querySelector('#input-tarefa');
+
+/**
+ * Select responsável pelo filtro de tarefas.
+ * @type {HTMLSelectElement}
+ */
 const filtro = document.querySelector('#filtrar-lista');
 
-// Invés de lidar com cada botão individualmente iremos lidar com o elemento pai
+/**
+ * Lista (UL) que contém todas as tarefas renderizadas.
+ * Utilizada para delegação de eventos.
+ * @type {HTMLUListElement}
+ */
 const lista = document.querySelector('#lista-tarefas');
 
-const apagarButton = document.querySelector('#deleteBtn')
+/**
+ * Botão responsável por apagar todas as tarefas.
+ * @type {HTMLButtonElement}
+ */
+const apagarButton = document.querySelector('#deleteBtn');
 
-//const selectedIndex = filtro.selectedIndex;
 
-// 2. Adicionar o "Ouvinte" (Event Listener) no FORMULÁRIO
+
+/* ==========================================================================
+   Registro de Eventos
+   ========================================================================== */
+
+/**
+ * Evento de envio do formulário.
+ * 
+ * Fluxo:
+ * - Impede reload da página
+ * - Captura o texto do input
+ * - Encaminha para a camada de regras
+ * - Limpa e foca o campo novamente
+ */
 formulario.addEventListener('submit', function(evento) {
     
     // 3. IMPEDIR o comportamento padrão (Recarregar a página)
@@ -38,12 +93,23 @@ formulario.addEventListener('submit', function(evento) {
     input.focus();
 });
 
+/**
+ * Evento de mudança no filtro de tarefas.
+ * 
+ * Encaminha o valor selecionado para a função de filtragem.
+ */
 filtro.addEventListener('change', (evento)=>{
     evento.preventDefault();
     console.log(evento.target.value);
     filtrarTarefa(evento.target.value);
 });
 
+/**
+ * Evento de clique na lista de tarefas.
+ * 
+ * Utiliza delegação de eventos para capturar cliques
+ * em botões dinâmicos (marcar / desmarcar).
+ */
 lista.addEventListener('click', (event) => {
     
     // 1. Onde foi o clique exatamente?
@@ -62,12 +128,30 @@ lista.addEventListener('click', (event) => {
     }
 });
 
+/**
+ * Evento de clique no botão de apagar todas as tarefas.
+ * 
+ * Solicita confirmação antes de executar a limpeza total.
+ */
 apagarButton.addEventListener('click',(event) =>{
     console.log("Será tudo apagado");
     solicitarLimpezaTotal();
     
 });
 
+/* ==========================================================================
+   Inicialização da Aplicação
+   ========================================================================== */
+
+/**
+ * Inicializa a aplicação.
+ * 
+ * Responsável por:
+ * - Carregar dados persistidos
+ * - Renderizar o estado inicial da interface
+ *
+ * @returns {void}
+ */
 function init() {
     console.log("Aplicação iniciada");
     // Carregar memória
@@ -75,5 +159,5 @@ function init() {
 
 };
 
-// init não roda automaticamente rsrs tem que chamar ao final para rodar assim que o script carregar
+// Executa a inicialização assim que o script é carregado
 init();
