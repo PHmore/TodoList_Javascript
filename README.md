@@ -2,7 +2,9 @@
 
 ![Badge Desenvolvido](https://img.shields.io/static/v1?label=STATUS&message=DESENVOLVIDO&color=GREEN&style=for-the-badge)
 
-![Desenvolvido por](https://img.shields.io/badge/Desenvolvido%20por-PHmore-blue)
+[![Live Demo](https://img.shields.io/badge/Live-Demo-success?style=for-the-badge)](https://phmore.github.io/TodoList_Javascript/)
+
+[![Desenvolvido por](https://img.shields.io/badge/Desenvolvido%20por-PHmore-blue)](https://github.com/PHmore/)
 ![JavaScript](https://img.shields.io/badge/JavaScript-ES6+-yellow?logo=javascript&logoColor=black)
 ![HTML5](https://img.shields.io/badge/HTML5-Markup-orange?logo=html5&logoColor=white)
 ![CSS3](https://img.shields.io/badge/CSS3-Style-blue?logo=css3&logoColor=white)
@@ -23,6 +25,13 @@ Este projeto segue o conceito de **Single Page Application (SPA)**,
 onde toda a interação acontece em uma única página HTML,
 com atualização dinâmica do conteúdo via JavaScript,
 sem recarregamento completo da página.
+
+## 🚀 Demonstração
+
+A aplicação está publicada via **GitHub Pages** e pode ser acessada em:
+
+🔗 https://phmore.github.io/TodoList_Javascript/
+
 
 ---
 
